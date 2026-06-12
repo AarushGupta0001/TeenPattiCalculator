@@ -1,0 +1,228 @@
+.setup {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+}
+
+.setup__card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 2rem 1.5rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.setup__header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.setup__logo {
+  font-size: 2.5rem;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.setup__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.setup__subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.setup__section {
+  margin-bottom: 1.75rem;
+}
+
+.setup__section-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+}
+
+.setup__counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.setup__counter-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  color: var(--gold);
+  font-size: 1.5rem;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.setup__counter-btn:not(:disabled):hover {
+  background: rgba(212, 175, 55, 0.12);
+  transform: scale(1.05);
+}
+
+.setup__counter-btn:not(:disabled):active {
+  transform: scale(0.95);
+}
+
+.setup__counter-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 3rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.setup__hint {
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+.setup__names {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.setup__name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.setup__name-label {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  min-width: 4.5rem;
+  flex-shrink: 0;
+}
+
+.setup__name-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: border-color var(--transition);
+}
+
+.setup__name-input:focus {
+  border-color: var(--gold);
+  outline: none;
+}
+
+.setup__wallet-presets {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.setup__preset-btn {
+  flex: 1;
+  min-width: 0;
+  padding: 0.75rem 0.5rem;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all var(--transition);
+}
+
+.setup__preset-btn--active {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: var(--gold);
+  color: var(--gold-light);
+}
+
+.setup__preset-btn:not(.setup__preset-btn--active):hover {
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+.setup__wallet-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 1.125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.setup__wallet-input:focus {
+  border-color: var(--gold);
+  outline: none;
+}
+
+.setup__error {
+  color: var(--danger);
+  font-size: 0.875rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.setup__start-btn {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+  border-radius: var(--radius-md);
+  color: #1a1a0a;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: transform var(--transition), box-shadow var(--transition);
+  box-shadow: var(--shadow-gold);
+}
+
+.setup__start-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 28px rgba(212, 175, 55, 0.4);
+}
+
+.setup__start-btn:active {
+  transform: translateY(0);
+}
+
+@media (min-width: 768px) {
+  .setup__card {
+    padding: 2.5rem 2rem;
+  }
+
+  .setup__title {
+    font-size: 1.75rem;
+  }
+}
