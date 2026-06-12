@@ -188,6 +188,57 @@
   outline: none;
 }
 
+.setup__mode-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.setup__mode-btn {
+  flex: 1;
+  padding: 0.875rem 1rem;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 1rem;
+  font-weight: 700;
+  transition: all var(--transition);
+  min-height: 48px;
+}
+
+.setup__mode-btn--active {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: var(--gold);
+  color: var(--gold-light);
+}
+
+.setup__mode-btn:not(.setup__mode-btn--active):hover {
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+.setup__boot-section {
+  padding-top: 0.25rem;
+}
+
+.setup__boot-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+}
+
+.setup__boot-toggle input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--gold);
+  cursor: pointer;
+}
+
 .setup__error {
   color: var(--danger);
   font-size: 0.875rem;

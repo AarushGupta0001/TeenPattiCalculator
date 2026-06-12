@@ -9,6 +9,7 @@ export const createRewindSnapshot = (state) => ({
   roundNumber: state.roundNumber,
   roundHistory: [...state.roundHistory],
   isDeclareModalOpen: state.isDeclareModalOpen,
+  lastBetAmount: state.lastBetAmount,
 });
 
 export const pushUndoSnapshot = (state) => {

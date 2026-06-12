@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import { BET_AMOUNTS } from '../../models/gameModels';
+import { GAME_MODES } from '../../models/gameModels';
 import { useGame } from '../../hooks/useGame';
 import { formatCurrency } from '../../utils/format';
 
 export function BettingControls() {
-  const { activePlayer, actions } = useGame();
+  const { activePlayer, actions, betOptions, state } = useGame();
   const [customAmount, setCustomAmount] = useState('');
   const [customError, setCustomError] = useState('');
 
+  const isShowMode = state.gameMode === GAME_MODES.SHOW;
   const isDisabled = !activePlayer || activePlayer.isPacked;
 
   const handleBet = (amount) => {
@@ -37,16 +38,28 @@ export function BettingControls() {
 
   return (
     <div className="betting-controls">
-      <h3 className="betting-controls__title">Place Bet</h3>
+      <h3 className="betting-controls__title">
+        Place Bet{isShowMode ? ' · Show' : ''}
+      </h3>
 
-      <div className="betting-controls__chips">
-        {BET_AMOUNTS.map((amount) => {
+      {isShowMode && state.lastBetAmount != null && (
+        <p className="betting-controls__show-hint">
+          Current / Double (last bet: {formatCurrency(state.lastBetAmount)})
+        </p>
+      )}
+
+      <div
+        className={`betting-controls__chips ${
+          isShowMode ? 'betting-controls__chips--show' : ''
+        }`}
+      >
+        {betOptions.map((amount) => {
           const insufficient =
             activePlayer && activePlayer.walletBalance < amount;
 
           return (
             <button
-              key={amount}
+              key={`${amount}-${isShowMode ? 'show' : 'classic'}`}
               type="button"
               className="betting-controls__chip"
               onClick={() => handleBet(amount)}

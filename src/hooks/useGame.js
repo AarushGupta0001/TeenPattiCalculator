@@ -1,5 +1,6 @@
 import { useContext, useMemo } from 'react';
 import { GameContext } from '../context/GameContextStore.js';
+import { getBetOptions } from '../utils/bettingUtils';
 import { sortPlayersByNet } from '../utils/calculations';
 import { getActivePlayer } from '../utils/turnUtils';
 
@@ -22,6 +23,11 @@ export function useGame() {
     [state.players]
   );
 
+  const betOptions = useMemo(
+    () => getBetOptions(state.gameMode, state.lastBetAmount),
+    [state.gameMode, state.lastBetAmount]
+  );
+
   const needsPlayerSelection = state.activePlayerId === null;
 
   const canRewind = (state.undoStack?.length ?? 0) > 0;
@@ -32,6 +38,7 @@ export function useGame() {
     startGameFromSetup,
     activePlayer,
     sortedPlayers,
+    betOptions,
     needsPlayerSelection,
     canRewind,
   };

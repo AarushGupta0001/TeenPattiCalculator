@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GAME_MODES } from '../../models/gameModels';
 import { useGame } from '../../hooks/useGame';
 import { PokerTable } from './PokerTable';
 import { RoundHistory } from './RoundHistory';
@@ -26,7 +27,12 @@ export function GameScreen() {
           <span className="game__logo">♠</span>
           <div>
             <h1 className="game__title">Teen Patti Tracker</h1>
-            <p className="game__subtitle">Round {state.roundNumber}</p>
+            <p className="game__subtitle">
+              Round {state.roundNumber}
+              <span className="game__mode-badge">
+                {state.gameMode === GAME_MODES.SHOW ? 'Show' : 'Classic'}
+              </span>
+            </p>
           </div>
         </div>
         <button type="button" className="game__new-btn" onClick={handleNewGame}>

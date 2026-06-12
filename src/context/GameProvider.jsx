@@ -3,9 +3,11 @@ import {
   createDefaultNames,
   createInitialState,
   createPlayer,
+  GAME_MODES,
   MAX_PLAYERS,
   MIN_PLAYERS,
 } from '../models/gameModels';
+import { applyBootToRound } from '../utils/bootUtils';
 import { pushUndoSnapshot } from '../utils/rewindUtils';
 import {
   getNextActivePlayerId,
@@ -49,15 +51,18 @@ function applyRoundWin(state, winnerId, players) {
     ...state.roundHistory,
   ];
 
-  return {
+  const nextRoundState = {
     ...state,
     players: updatedPlayers,
     pot: 0,
     roundNumber: state.roundNumber + 1,
     activePlayerId: null,
+    lastBetAmount: null,
     isDeclareModalOpen: false,
     roundHistory,
   };
+
+  return applyBootToRound(nextRoundState);
 }
 
 function gameReducer(state, action) {
@@ -80,19 +85,44 @@ function gameReducer(state, action) {
     case 'SET_STARTING_WALLET':
       return { ...state, startingWallet: action.payload.wallet };
 
-    case 'START_GAME': {
-      const { players } = action.payload;
+    case 'SET_BOOT_AMOUNT': {
+      const amount = Math.max(0, action.payload.amount);
       return {
+        ...state,
+        draftBootAmount: amount,
+        bootAmount: state.bootEnabled ? amount : 0,
+      };
+    }
+
+    case 'SET_BOOT_ENABLED': {
+      const enabled = action.payload.enabled;
+      return {
+        ...state,
+        bootEnabled: enabled,
+        bootAmount: enabled ? state.draftBootAmount : 0,
+      };
+    }
+
+    case 'SET_GAME_MODE':
+      return { ...state, gameMode: action.payload.gameMode };
+
+    case 'START_GAME': {
+      const { players, bootAmount, gameMode } = action.payload;
+      const baseState = {
         ...state,
         screen: 'game',
         players,
+        bootAmount,
+        gameMode,
         pot: 0,
         roundNumber: 1,
         activePlayerId: null,
+        lastBetAmount: null,
         isDeclareModalOpen: false,
         roundHistory: [],
         undoStack: [],
       };
+      return applyBootToRound(baseState);
     }
 
     case 'SET_ACTIVE_PLAYER':
@@ -127,6 +157,8 @@ function gameReducer(state, action) {
         players,
         pot: state.pot + amount,
         activePlayerId: nextActiveId,
+        lastBetAmount:
+          state.gameMode === GAME_MODES.SHOW ? amount : state.lastBetAmount,
       };
     }
 
@@ -206,8 +238,17 @@ export function GameProvider({ children }) {
       setStartingWallet: (wallet) =>
         dispatch({ type: 'SET_STARTING_WALLET', payload: { wallet } }),
 
-      startGame: (players) =>
-        dispatch({ type: 'START_GAME', payload: { players } }),
+      setBootAmount: (amount) =>
+        dispatch({ type: 'SET_BOOT_AMOUNT', payload: { amount } }),
+
+      setBootEnabled: (enabled) =>
+        dispatch({ type: 'SET_BOOT_ENABLED', payload: { enabled } }),
+
+      setGameMode: (gameMode) =>
+        dispatch({ type: 'SET_GAME_MODE', payload: { gameMode } }),
+
+      startGame: (players, bootAmount, gameMode) =>
+        dispatch({ type: 'START_GAME', payload: { players, bootAmount, gameMode } }),
 
       setActivePlayer: (playerId) =>
         dispatch({ type: 'SET_ACTIVE_PLAYER', payload: { playerId } }),
@@ -232,11 +273,11 @@ export function GameProvider({ children }) {
   );
 
   const startGameFromSetup = useCallback(
-    (draftNames, startingWallet) => {
+    (draftNames, startingWallet, bootAmount, gameMode) => {
       const players = draftNames.map((name, index) =>
         createPlayer(name, index, startingWallet)
       );
-      actions.startGame(players);
+      actions.startGame(players, bootAmount, gameMode);
     },
     [actions]
   );

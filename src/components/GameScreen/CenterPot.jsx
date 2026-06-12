@@ -15,6 +15,11 @@ export function CenterPot() {
           {activePlayer ? activePlayer.name : 'No active player'}
         </span>
       </div>
+      {state.bootAmount > 0 && (
+        <p className="center-pot__boot">
+          Boot: {formatCurrency(state.bootAmount)}/player
+        </p>
+      )}
     </div>
   );
 }

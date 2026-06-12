@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import {
+  BOOT_PRESETS,
+  GAME_MODES,
   MAX_PLAYERS,
   MIN_PLAYERS,
   validateSetup,
@@ -24,13 +26,29 @@ export function SetupScreen() {
     setError('');
   };
 
+  const handleBootChange = (value) => {
+    const parsed = parseInt(value, 10);
+    actions.setBootAmount(Number.isNaN(parsed) ? 0 : parsed);
+    setError('');
+  };
+
   const handleStart = () => {
-    const validationError = validateSetup(state.draftNames, state.startingWallet);
+    const bootAmount = state.bootEnabled ? state.draftBootAmount : 0;
+    const validationError = validateSetup(
+      state.draftNames,
+      state.startingWallet,
+      bootAmount
+    );
     if (validationError) {
       setError(validationError);
       return;
     }
-    startGameFromSetup(state.draftNames, state.startingWallet);
+    startGameFromSetup(
+      state.draftNames,
+      state.startingWallet,
+      bootAmount,
+      state.gameMode
+    );
   };
 
   return (
@@ -108,6 +126,76 @@ export function SetupScreen() {
             onChange={(e) => handleWalletChange(e.target.value)}
             placeholder="Enter starting wallet"
           />
+        </section>
+
+        <section className="setup__section">
+          <h2 className="setup__section-title">Step 4 — Game Mode</h2>
+          <div className="setup__mode-toggle">
+            <button
+              type="button"
+              className={`setup__mode-btn ${
+                state.gameMode === GAME_MODES.CLASSIC ? 'setup__mode-btn--active' : ''
+              }`}
+              onClick={() => actions.setGameMode(GAME_MODES.CLASSIC)}
+            >
+              Classic
+            </button>
+            <button
+              type="button"
+              className={`setup__mode-btn ${
+                state.gameMode === GAME_MODES.SHOW ? 'setup__mode-btn--active' : ''
+              }`}
+              onClick={() => actions.setGameMode(GAME_MODES.SHOW)}
+            >
+              Show
+            </button>
+          </div>
+          <p className="setup__hint">
+            {state.gameMode === GAME_MODES.CLASSIC
+              ? 'Fixed betting chips from ₹10 to ₹100.'
+              : 'Dynamic betting: current bet and double, starting at ₹10 / ₹20.'}
+          </p>
+        </section>
+
+        <section className="setup__section setup__boot-section">
+          <h2 className="setup__section-title">Step 5 — Boot Amount</h2>
+          <label className="setup__boot-toggle">
+            <input
+              type="checkbox"
+              checked={state.bootEnabled}
+              onChange={(e) => actions.setBootEnabled(e.target.checked)}
+            />
+            <span>Enable boot (ante each round)</span>
+          </label>
+          {state.bootEnabled && (
+            <>
+              <p className="setup__hint">
+                Deducted from every player and added to the pot at the start of each round
+              </p>
+              <div className="setup__wallet-presets">
+                {BOOT_PRESETS.map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    className={`setup__preset-btn ${
+                      state.draftBootAmount === preset ? 'setup__preset-btn--active' : ''
+                    }`}
+                    onClick={() => actions.setBootAmount(preset)}
+                  >
+                    ₹{preset.toLocaleString('en-IN')}
+                  </button>
+                ))}
+              </div>
+              <input
+                type="number"
+                className="setup__wallet-input"
+                min="1"
+                value={state.draftBootAmount || ''}
+                onChange={(e) => handleBootChange(e.target.value)}
+                placeholder="Enter boot amount"
+              />
+            </>
+          )}
         </section>
 
         {error && <p className="setup__error">{error}</p>}
